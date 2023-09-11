@@ -33,29 +33,61 @@ internal class Program //Consumer
 
         #region 2. Fanaout Exchange Davranışı
 
+        //var factory = new ConnectionFactory();
+        //factory.Uri = new Uri("amqps://kzylzeod:w54vPXXqZXhIMKETehruwfRirfxpOZc-@moose.rmq.cloudamqp.com/kzylzeod");
+
+        //using var connection = factory.CreateConnection();
+        //var channel = connection.CreateModel();
+        ////var randomquevename = channel.QueueDeclare().QueueName;
+        //var randomquevename = "channel.QueueDeclare().QueueName";
+        //channel.QueueDeclare(randomquevename, true, false, false);
+        //channel.QueueBind(randomquevename, "Log-FanaoutExchange", "", null);
+
+        //channel.BasicQos(0, 1, false);
+        //var consumer =new EventingBasicConsumer(channel);
+        //channel.BasicConsume(randomquevename,false, consumer);
+        //Console.WriteLine("Loglanıyor");
+        //consumer.Received += (object sender, BasicDeliverEventArgs e) =>
+        //{
+        //    var message = Encoding.UTF8.GetString(e.Body.ToArray());
+        //    Thread.Sleep(1000);
+        //    Console.WriteLine(message);
+        //    channel.BasicAck(e.DeliveryTag, false);
+        //};
+
+        //Console.ReadLine();
+        #endregion
+        #region 3. direct Exchange
+
         var factory = new ConnectionFactory();
         factory.Uri = new Uri("amqps://kzylzeod:w54vPXXqZXhIMKETehruwfRirfxpOZc-@moose.rmq.cloudamqp.com/kzylzeod");
 
         using var connection = factory.CreateConnection();
         var channel = connection.CreateModel();
+
+
         //var randomquevename = channel.QueueDeclare().QueueName;
-        var randomquevename = "channel.QueueDeclare().QueueName";
-        channel.QueueDeclare(randomquevename, true, false, false);
-        channel.QueueBind(randomquevename, "Log-FanaoutExchange", "", null);
+
+
 
         channel.BasicQos(0, 1, false);
-        var consumer =new EventingBasicConsumer(channel);
-        channel.BasicConsume(randomquevename,false, consumer);
-        Console.WriteLine("Loglanıyor");
+        var consumer = new EventingBasicConsumer(channel);
+        var queveName = "Direct-queveCritical";
+        //var queveInfo = "Direct-queveInfo";
+        channel.BasicConsume(queveName, false, consumer);
+        Console.WriteLine("Loglanıyor dinleniyor...");
         consumer.Received += (object sender, BasicDeliverEventArgs e) =>
         {
             var message = Encoding.UTF8.GetString(e.Body.ToArray());
             Thread.Sleep(1000);
-            Console.WriteLine(message);
+            Console.WriteLine("Gelen Mesaj :" + message +e.Body.ToString());
+            File.AppendAllText("Log-critical.txt", message +"\n");
             channel.BasicAck(e.DeliveryTag, false);
         };
-        #endregion
+
         Console.ReadLine();
+
+        #endregion
 
     }
 
