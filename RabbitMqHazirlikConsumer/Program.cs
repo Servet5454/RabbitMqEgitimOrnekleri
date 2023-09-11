@@ -57,7 +57,40 @@ internal class Program //Consumer
 
         //Console.ReadLine();
         #endregion
+
         #region 3. direct Exchange
+
+        //var factory = new ConnectionFactory();
+        //factory.Uri = new Uri("amqps://kzylzeod:w54vPXXqZXhIMKETehruwfRirfxpOZc-@moose.rmq.cloudamqp.com/kzylzeod");
+
+        //using var connection = factory.CreateConnection();
+        //var channel = connection.CreateModel();
+
+
+        ////var randomquevename = channel.QueueDeclare().QueueName;
+
+
+
+        //channel.BasicQos(0, 1, false);
+        //var consumer = new EventingBasicConsumer(channel);
+        //var queveName = "Direct-queveCritical";
+        ////var queveInfo = "Direct-queveInfo";
+        //channel.BasicConsume(queveName, false, consumer);
+        //Console.WriteLine("Loglanıyor dinleniyor...");
+        //consumer.Received += (object sender, BasicDeliverEventArgs e) =>
+        //{
+        //    var message = Encoding.UTF8.GetString(e.Body.ToArray());
+        //    Thread.Sleep(1000);
+        //    Console.WriteLine("Gelen Mesaj :" + message +e.Body.ToString());
+        //    File.AppendAllText("Log-critical.txt", message +"\n");
+        //    channel.BasicAck(e.DeliveryTag, false);
+        //};
+
+        //Console.ReadLine();
+
+        #endregion
+
+        #region 4. Topic Exchange
 
         var factory = new ConnectionFactory();
         factory.Uri = new Uri("amqps://kzylzeod:w54vPXXqZXhIMKETehruwfRirfxpOZc-@moose.rmq.cloudamqp.com/kzylzeod");
@@ -72,16 +105,20 @@ internal class Program //Consumer
 
         channel.BasicQos(0, 1, false);
         var consumer = new EventingBasicConsumer(channel);
-        var queveName = "Direct-queveCritical";
-        //var queveInfo = "Direct-queveInfo";
+        var queveName =channel.QueueDeclare().QueueName;
+
+        var routeKey = "*.Error.*";
+
+        channel.QueueBind(queveName, "Topic-Exchange1", routeKey);
+        
         channel.BasicConsume(queveName, false, consumer);
         Console.WriteLine("Loglanıyor dinleniyor...");
-        consumer.Received += (object sender, BasicDeliverEventArgs e) =>
+        consumer.Received += (object? sender, BasicDeliverEventArgs e) =>
         {
             var message = Encoding.UTF8.GetString(e.Body.ToArray());
             Thread.Sleep(1000);
-            Console.WriteLine("Gelen Mesaj :" + message +e.Body.ToString());
-            File.AppendAllText("Log-critical.txt", message +"\n");
+            Console.WriteLine($"Gelen Mesaj :{message}");
+            
             channel.BasicAck(e.DeliveryTag, false);
         };
 

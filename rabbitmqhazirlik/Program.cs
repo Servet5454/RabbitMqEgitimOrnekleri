@@ -7,10 +7,10 @@ internal class Program //Publisher
 {
     public enum LogNames
     {
-        Critical =1,
-        Error =2,
-        Warning =3,
-        Info =4
+        Critical = 1,
+        Error = 2,
+        Warning = 3,
+        Info = 4
     }
     private static void Main(string[] args)
     {
@@ -60,6 +60,37 @@ internal class Program //Publisher
         #region 3. direct Exchange
 
 
+        //var factory = new ConnectionFactory();
+
+        //factory.Uri = new Uri("amqps://kzylzeod:w54vPXXqZXhIMKETehruwfRirfxpOZc-@moose.rmq.cloudamqp.com/kzylzeod");
+        //using var connection = factory.CreateConnection();
+        //var channel = connection.CreateModel();
+
+        //channel.ExchangeDeclare("Direct-Exchange", durable: true, type: ExchangeType.Direct);
+
+
+        //Enum.GetNames(typeof(LogNames)).ToList().ForEach(x =>
+        //{
+        //    var routeKey = $"route-{x}";
+
+        //    var queveName =$"Direct-queve{x}";
+        //    channel.QueueDeclare(queveName,durable:true,exclusive:false,autoDelete:false);
+        //    channel.QueueBind(queveName, "Direct-Exchange",routeKey,null);
+        //});
+
+        //Enumerable.Range(1, 50).ToList().ForEach(x =>
+        //{
+        //    LogNames log =(LogNames)new Random().Next(1,5);
+        //    string message = $"Direct Exchange mesajı Tipi :{log}";
+        //    var messagebody = Encoding.UTF8.GetBytes(message);
+        //    var routeKey =$"route-{log}";
+        //    channel.BasicPublish("Direct-Exchange", routeKey, false);
+        //    Console.WriteLine($"Messajlar Gönderiliyor  :{log}");
+        //});
+
+        #endregion
+
+        #region 4. Topic Exchange
 
 
         var factory = new ConnectionFactory();
@@ -68,27 +99,29 @@ internal class Program //Publisher
         using var connection = factory.CreateConnection();
         var channel = connection.CreateModel();
 
-        channel.ExchangeDeclare("Direct-Exchange", durable: true, type: ExchangeType.Direct);
+        channel.ExchangeDeclare("Topic-Exchange1", durable: true, type: ExchangeType.Topic);
 
 
-        Enum.GetNames(typeof(LogNames)).ToList().ForEach(x =>
-        {
-            var routeKey = $"route-{x}";
 
-            var queveName =$"Direct-queve{x}";
-            channel.QueueDeclare(queveName,durable:true,exclusive:false,autoDelete:false);
-            channel.QueueBind(queveName, "Direct-Exchange",routeKey,null);
-        });
-
+        Random rnd = new Random();
         Enumerable.Range(1, 50).ToList().ForEach(x =>
         {
-            LogNames log =(LogNames)new Random().Next(1,5);
-            string message = $"Direct Exchange mesajı Tipi :{log}";
+            LogNames log1 = (LogNames)rnd.Next(1, 5);
+            LogNames log2 = (LogNames)rnd.Next(1, 5);
+            LogNames log3 = (LogNames)rnd.Next(1, 5);
+
+            var routeKey = $"{log1}.{log2}.{log3}";
+
+            string message = $"log-type: {log1}-{log2}-{log3}";
+
             var messagebody = Encoding.UTF8.GetBytes(message);
-            var routeKey =$"route-{log}";
-            channel.BasicPublish("Direct-Exchange", routeKey, false);
-            Console.WriteLine($"Messajlar Gönderiliyor  :{log}");
+
+
+            channel.BasicPublish("Topic-Exchange1", routeKey, false,body:messagebody);
+            Console.WriteLine($"Messajlar Gönderiliyor  :{message}");
         });
+
+        Console.ReadLine();
 
         #endregion
     }
