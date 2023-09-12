@@ -2,7 +2,9 @@
 
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Shared;
 using System.Text;
+using System.Text.Json;
 
 internal class Program //Consumer
 {
@@ -92,6 +94,82 @@ internal class Program //Consumer
 
         #region 4. Topic Exchange
 
+        //var factory = new ConnectionFactory();
+        //factory.Uri = new Uri("amqps://kzylzeod:w54vPXXqZXhIMKETehruwfRirfxpOZc-@moose.rmq.cloudamqp.com/kzylzeod");
+
+        //using var connection = factory.CreateConnection();
+        //var channel = connection.CreateModel();
+
+
+        ////var randomquevename = channel.QueueDeclare().QueueName;
+
+
+
+        //channel.BasicQos(0, 1, false);
+        //var consumer = new EventingBasicConsumer(channel);
+        //var queveName =channel.QueueDeclare().QueueName;
+
+        //var routeKey = "Info.#";
+
+        //channel.QueueBind(queveName, "Topic-Exchange1", routeKey);
+
+        //channel.BasicConsume(queveName, false, consumer);
+        //Console.WriteLine("Loglanıyor dinleniyor...");
+        //consumer.Received += (object? sender, BasicDeliverEventArgs e) =>
+        //{
+        //    var message = Encoding.UTF8.GetString(e.Body.ToArray());
+        //    Thread.Sleep(1000);
+        //    Console.WriteLine($"Gelen Mesaj :{message}");
+
+        //    channel.BasicAck(e.DeliveryTag, false);
+        //};
+
+        //Console.ReadLine();
+
+        #endregion
+
+        #region 5. Header Exchange
+
+        //var factory = new ConnectionFactory();
+        //factory.Uri = new Uri("amqps://kzylzeod:w54vPXXqZXhIMKETehruwfRirfxpOZc-@moose.rmq.cloudamqp.com/kzylzeod");
+
+        //using var connection = factory.CreateConnection();
+        //var channel = connection.CreateModel();
+
+
+        ////var randomquevename = channel.QueueDeclare().QueueName;
+
+
+
+        //channel.BasicQos(0, 1, false);
+        //var consumer = new EventingBasicConsumer(channel);
+
+        //var queveName = channel.QueueDeclare().QueueName;
+
+        //Dictionary<string,object> headers = new Dictionary<string, object>();
+        //headers.Add("format", "pdf");
+        //headers.Add("shape", "a4");
+        //headers.Add("x-match", "all"); // burası all olduğu için hepsi uyması gerekmektedir... all yerine any yaparsak herhangi biri uyarsa işlemi yapmaktadır
+
+        //channel.QueueBind(queveName, "header-Exchange",string.Empty,headers);
+
+        //channel.BasicConsume(queveName, false, consumer);
+        //Console.WriteLine("Loglanıyor dinleniyor...");
+        //consumer.Received += (object? sender, BasicDeliverEventArgs e) =>
+        //{
+        //    var message = Encoding.UTF8.GetString(e.Body.ToArray());
+        //    Thread.Sleep(1000);
+        //    Console.WriteLine($"Gelen Mesaj :{message}");
+
+        //    channel.BasicAck(e.DeliveryTag, false);
+        //};
+
+        //Console.ReadLine();
+
+        #endregion
+
+        #region 6. Complex Typler İle Veri Gönderme
+
         var factory = new ConnectionFactory();
         factory.Uri = new Uri("amqps://kzylzeod:w54vPXXqZXhIMKETehruwfRirfxpOZc-@moose.rmq.cloudamqp.com/kzylzeod");
 
@@ -105,20 +183,26 @@ internal class Program //Consumer
 
         channel.BasicQos(0, 1, false);
         var consumer = new EventingBasicConsumer(channel);
-        var queveName =channel.QueueDeclare().QueueName;
 
-        var routeKey = "*.Error.*";
+        var queveName = channel.QueueDeclare().QueueName;
 
-        channel.QueueBind(queveName, "Topic-Exchange1", routeKey);
-        
+        Dictionary<string, object> headers = new Dictionary<string, object>();
+        headers.Add("format", "pdf");
+        headers.Add("shape", "a4");
+        headers.Add("x-match", "all"); // burası all olduğu için hepsi uyması gerekmektedir... all yerine any yaparsak herhangi biri uyarsa işlemi yapmaktadır
+
+        channel.QueueBind(queveName, "header-Exchange", string.Empty, headers);
+
         channel.BasicConsume(queveName, false, consumer);
         Console.WriteLine("Loglanıyor dinleniyor...");
         consumer.Received += (object? sender, BasicDeliverEventArgs e) =>
         {
             var message = Encoding.UTF8.GetString(e.Body.ToArray());
+
+            Product product =JsonSerializer.Deserialize<Product>(message);
             Thread.Sleep(1000);
-            Console.WriteLine($"Gelen Mesaj :{message}");
-            
+            Console.WriteLine($"Gelen Mesaj :{product.Id}-{product.Name}-{product.Price}-{product.Description}");
+
             channel.BasicAck(e.DeliveryTag, false);
         };
 
