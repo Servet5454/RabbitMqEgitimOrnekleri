@@ -47,8 +47,10 @@ namespace RabbitMqWatermark.Backgroundservices
 
         }
 
-        private Task Consumer_Received(object sender, BasicDeliverEventArgs @event)
+        private async Task Consumer_Received(object sender, BasicDeliverEventArgs @event)
         {
+
+           
             try
             {
                 var imageCreatedEvent = JsonSerializer.Deserialize<productImageCreatedEvent>(Encoding.UTF8.GetString(@event.Body.ToArray()));
@@ -59,7 +61,7 @@ namespace RabbitMqWatermark.Backgroundservices
 
                 using var graphic = Graphics.FromImage(img);
 
-                var font = new Font(FontFamily.GenericMonospace, 32, FontStyle.Bold, GraphicsUnit.Pixel);
+                var font = new Font(FontFamily.GenericMonospace, 40, FontStyle.Bold, GraphicsUnit.Pixel);
 
                 var textSize = graphic.MeasureString(siteName, font);
 
@@ -77,13 +79,14 @@ namespace RabbitMqWatermark.Backgroundservices
                 graphic.Dispose();
                 _channel.BasicAck(@event.DeliveryTag, false);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
 
                 throw;
             }
 
-            return Task.CompletedTask;
+           
             
 
 
