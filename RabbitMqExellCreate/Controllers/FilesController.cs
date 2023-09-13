@@ -19,8 +19,9 @@ namespace RabbitMqExellCreate.Controllers
         public async Task<IActionResult> upload(IFormFile file,int fileId)
         {
             if (file is not { Length: > 0 }) return BadRequest();
+            var enBuyukIdliUserFile = _context.UserFiles.OrderByDescending(p => p.Id).FirstOrDefault();
 
-            var userFile = await _context.UserFiles.FirstAsync(p => p.Id == 4);
+            var userFile = await _context.UserFiles.FirstAsync(p => p.Id == enBuyukIdliUserFile.Id);//todo burada sıkıntı var
             var filePath = userFile.FileName + Path.GetExtension(file.FileName);
 
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files", filePath);
