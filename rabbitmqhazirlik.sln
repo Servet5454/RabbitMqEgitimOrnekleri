@@ -7,9 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rabbitmqhazirlikpublisher",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMqHazirlikConsumer", "RabbitMqHazirlikConsumer\RabbitMqHazirlikConsumer.csproj", "{57D2ED12-6C89-4F28-A67F-A8EBB9A6AF38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{4EC1A999-9F68-4AD7-AD9E-82B73CEA782A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{4EC1A999-9F68-4AD7-AD9E-82B73CEA782A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMqWatermark", "RabbitMqWatermark\RabbitMqWatermark.csproj", "{44FCDB8C-EC44-461E-AB3E-E7BA482B402D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMqWatermark", "RabbitMqWatermark\RabbitMqWatermark.csproj", "{44FCDB8C-EC44-461E-AB3E-E7BA482B402D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMqExellCreate", "RabbitMqExellCreate\RabbitMqExellCreate.csproj", "{66546125-F3DE-49E3-8DE4-82A82E09757A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileCreateWorkerService", "FileCreateWorkerService\FileCreateWorkerService.csproj", "{1698C9BD-6C5E-49A5-A17C-D2691D90B95A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{44FCDB8C-EC44-461E-AB3E-E7BA482B402D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44FCDB8C-EC44-461E-AB3E-E7BA482B402D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44FCDB8C-EC44-461E-AB3E-E7BA482B402D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66546125-F3DE-49E3-8DE4-82A82E09757A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66546125-F3DE-49E3-8DE4-82A82E09757A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66546125-F3DE-49E3-8DE4-82A82E09757A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66546125-F3DE-49E3-8DE4-82A82E09757A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1698C9BD-6C5E-49A5-A17C-D2691D90B95A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1698C9BD-6C5E-49A5-A17C-D2691D90B95A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1698C9BD-6C5E-49A5-A17C-D2691D90B95A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1698C9BD-6C5E-49A5-A17C-D2691D90B95A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
