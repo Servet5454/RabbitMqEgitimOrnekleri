@@ -47,7 +47,7 @@ namespace RabbitMqExellCreate.Controllers
         public async Task<IActionResult> Files()
         {
 
-            return View(await _context.UserFiles.Where(p=>p.UserId !=null).ToListAsync());
+            return View(await _context.UserFiles.Where(p=>p.UserId !=null).OrderByDescending(p=>p.CreatedDate).ToListAsync());
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using RabbitMqExellCreate.Hubs;
 using RabbitMqExellCreate.Models;
 
 namespace RabbitMqExellCreate.Controllers
@@ -10,10 +12,12 @@ namespace RabbitMqExellCreate.Controllers
     public class FilesController : ControllerBase
     {
         private readonly AppDbcontext _context;
+        private readonly IHubContext<MyHub> _hubContext;
 
-        public FilesController(AppDbcontext context)
+        public FilesController(AppDbcontext context, IHubContext<MyHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
         [HttpPost]
         public async Task<IActionResult> upload(IFormFile file,int fileId)
@@ -35,6 +39,8 @@ namespace RabbitMqExellCreate.Controllers
             await _context.SaveChangesAsync();
 
             //signalR ile notification oluşturulacak
+
+            await _hubContext.Clients.All.SendAsync("CompletedFile");
             return Ok();
         }
     }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RabbitMQ.Client;
+using RabbitMqExellCreate.Hubs;
 using RabbitMqExellCreate.Models;
 using RabbitMqExellCreate.Services;
 
@@ -23,6 +24,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(opt =>
 {
     opt.User.RequireUniqueEmail = true;
 }).AddEntityFrameworkStores<AppDbcontext>();
+
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -64,7 +67,11 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseAuthorization();
-
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<MyHub>("/MyHub");
+   
+});
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
